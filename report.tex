@@ -1,0 +1,61 @@
+\documentclass[addpoints,12pt]{exam}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\Set}[1]{\big\{ #1 \big\}}
+\usepackage{color}
+\usepackage{xcolor,pgf,tikz,pgflibraryarrows,pgffor,pgflibrarysnakes}
+
+\usetikzlibrary{fit} % fitting shapes to coordinates
+\usetikzlibrary{backgrounds} % drawing the background after the foreground
+
+\usepgflibrary{shapes}
+\usetikzlibrary{snakes,automata}
+
+
+\tikzstyle{background}=[rectangle,fill=gray!10, inner sep=0.1cm, rounded corners=0mm]
+
+\usepackage{tikz}
+\tikzstyle{nloc}=[draw, text badly centered, rectangle, rounded corners, minimum size=2em,inner sep=0.5em]
+\tikzstyle{loc}=[draw,rectangle,minimum size=1.4em,inner sep=0em]
+\tikzstyle{trans}=[-latex, rounded corners]
+\tikzstyle{trans2}=[-latex, dashed, rounded corners]
+
+\newcommand{\Aa}{\mathcal{A}}
+
+
+\title{CSCI 5832: Natural Language Processing\\Extra Assignment: Deception Detection}
+\date{Assignment Report}
+\author{Paramjot Singh}
+\begin{document}
+\maketitle
+
+\pagestyle{headandfoot}
+\runningheadrule
+\firstpageheader{CSCI 5832X (Fall 2017)}{Assignment 2}{\today}
+\runningheader{CSCI 5832: Extra Assignment}
+              {}
+              {Name: Paramjot Singh}
+              \firstpagefooter{}{}{}
+              \runningfooter{}{}{}
+\textbf{Introduction}\\
+I started this assignment with just running the dev set with Naive-Bayes implemented in Assign 3. As expected it wasn't good. It gave somewhere around 40ish percent accuracy.
+So starting with the implementation decisions. Similar to previous assignment, I split the data based on Pareto principle. 80\% for Training set(150 reviews) and 20\% for Dev set(40 reviews) and tried cross validation later on to check the accuracy.
+\\ \\
+\textbf{Segmentation}\\
+I kept the segmentation as it was earlier, that is while creating the dictionary, I removed occurences of punctuations and converted them to lower case and did split by spaces. I know this won't help much while calculating accuracy, but it will help in reducing size of vocabulary and also will help in removing high frequency words.
+After calculating the word frequency dict for positive and negative category. I clipped on the high frequency($>$100) and single occurence words. This removed words like 'the', 'and', 'a', 'was', etc which don't help in sentiment analysis.\\ \\
+\textbf{Bucket classification and Naive-Bayes}\\
+For the main text analysis, I first started with tagging the current train data with Positive and Negative review, for which I used Assignment 3 train data. After tagging the review ids, I trained model, with four buckets: True-Positive, True-Negative, False-Positive, False-Negative. I calculated seperate word counts and calculated probability true and false based on both true and both false classes using Naive-Bayes. To avoid underflow, I converted the probabilities to log and add them up. I skipped the Prior while calculation (since it's same for both i.e. 0.5 or log(0.5)). After the probability calculation, compared the prob for both categories (true or false) and sav6ed value for higher number. 
+I expected it to be around 50\% and it was coming around 54\%. Although I understand just making everything T or F, will get 50\% as well :).\\ \\
+\textbf{Observations and Conclusion}\\
+I think I can improve it more. On reading few research papers I realised more features can be added such as taking words which kind of seperates fake from geniune reviews, checking for CAPS or multiple exclamantions(which I removed in very beginning :( ), which characterizes geniune reviews generally. One more thing I read was fake reviews uses more nouns whereas genuine uses more verbs, I'm not sure how correct that is. But it can be done with performing POS tagging during training.
+So based on final counts the accuracy is coming around 54\% (average).
+Hoping to see better number with the final test data !
+
+
+
+\end{document}
+
